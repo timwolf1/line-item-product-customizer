@@ -33,9 +33,7 @@ document.getElementById(domElements.engraveQtyBtn).addEventListener("click", eve
                 addCustomizationBox(numOfItems);
             }
         }
-    }
-
-    
+    }    
 });
 
 document.getElementById(domElements.addCustBoxLink).addEventListener("click", event => {
@@ -50,13 +48,20 @@ const addCustomizationBox = (num) => {
     const markup = `
         <div class="customizationBox-item" id="customizationBox-item-${num}">
             <p style="text-align: center">ITEM ${num}</p>
-            <input type="text" placeholder="LINE 1" size="16" style="margin: 10px"><input type="checkbox">
-            <input type="text" placeholder="LINE 2" size="16" style="margin: 10px"><input type="checkbox">
-            <input type="text" placeholder="LINE 3" size="16" style="margin: 10px"><input type="checkbox">
+            <input type="text" placeholder="LINE 1" size="16" style="margin: 10px" id="custInputTxt-1-${num}"> ${num === 1 ? `<input type="checkbox" id="custInputCheck-1-${num}">` : ""}
+            <input type="text" placeholder="LINE 2" size="16" style="margin: 10px" id="custInputTxt-2-${num}"> ${num === 1 ? `<input type="checkbox" id="custInputCheck-2-${num}">` : ""}
+            <input type="text" placeholder="LINE 3" size="16" style="margin: 10px" id="custInputTxt-3-${num}"> ${num === 1 ? `<input type="checkbox" id="custInputCheck-3-${num}">` : ""}
         </div>
     `;
 
     document.getElementById(domElements.itemCustomizerSpan).insertAdjacentHTML("beforeend", markup);
+};
+
+const propagateTextInput = (inputNum, inputVal) => {
+    for (i = 2; i <= numOfItems; i++) {
+        const element = document.getElementById(`custInputTxt-${inputNum}-${i}`);
+        element.value = inputVal;
+    }
 };
 
 const removeCustomizationBox = (num) => {
@@ -66,3 +71,21 @@ const removeCustomizationBox = (num) => {
 };
 
 //test
+
+window.addEventListener("change", event => {
+    //console.log(event.srcElement.id);
+    if ((event.srcElement.id).includes("custInputCheck")) {
+        const deconstructedId = (event.srcElement.id).split("-");
+        const inputNum = deconstructedId[1];
+        let inputVal;
+        
+        
+        if (event.target.checked) {
+            inputVal = document.getElementById(`custInputTxt-${deconstructedId[1]}-${deconstructedId[2]}`).value;
+        } else {
+            inputVal = "";
+        }
+        //console.log(event.srcElement.id);
+        propagateTextInput(inputNum, inputVal);
+    }
+});
