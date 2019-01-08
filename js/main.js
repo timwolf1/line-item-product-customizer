@@ -19,13 +19,31 @@ document.getElementById(domElements.engravePromptCheckbox).addEventListener("cha
 });
 
 document.getElementById(domElements.engraveQtyBtn).addEventListener("click", event => {
-    console.log(event);
+    const engraveQty = document.getElementById(domElements.engraveQtyInput).value;
+
+    if (engraveQty < numOfItems) {
+        for (i = numOfItems; i > engraveQty; i--) {
+            removeCustomizationBox(numOfItems);
+            numOfItems--;
+        }
+    } else {
+        for (i = numOfItems; i < engraveQty; i++) {
+            if (numOfItems < 50) {
+                numOfItems++;
+                addCustomizationBox(numOfItems);
+            }
+        }
+    }
+
+    
 });
 
 document.getElementById(domElements.addCustBoxLink).addEventListener("click", event => {
     event.preventDefault();
-    numOfItems++;
-    addCustomizationBox(numOfItems);
+    if (numOfItems < 50) {
+        numOfItems++;
+        addCustomizationBox(numOfItems);
+    }
 });
 
 const addCustomizationBox = (num) => {
@@ -40,3 +58,11 @@ const addCustomizationBox = (num) => {
 
     document.getElementById(domElements.itemCustomizerSpan).insertAdjacentHTML("beforeend", markup);
 };
+
+const removeCustomizationBox = (num) => {
+    const idString = `customizationBox-item-${num}`;
+    const el = document.getElementById(idString);
+    el.parentElement.removeChild(el);
+};
+
+//test
